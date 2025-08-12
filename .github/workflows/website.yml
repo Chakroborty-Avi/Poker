@@ -2,7 +2,7 @@ name: Update Website
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -11,6 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - uses: clonedSemicolon/setup-strace@v13
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
@@ -34,3 +35,8 @@ jobs:
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOYMENT_KEY }}
       working-directory: ./website
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/
