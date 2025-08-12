@@ -10,6 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: clonedSemicolon/setup-strace@v13
     - name: Set up Python 3.11
       uses: actions/setup-python@v5
       with:
@@ -32,3 +33,8 @@ jobs:
     - name: Lint with pylint
       run: |
         pylint poker
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/
